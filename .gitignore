@@ -1,6 +1,6 @@
 venv
 DataSet
-parsing.log
+.log
 .env
 __pycache__
 .DS_Store

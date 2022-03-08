@@ -1,11 +1,5 @@
 import time, threading
-from parsing.get_config import current_config
-from parsing import logger
-
-
-config = current_config()
-
-config = config[0]
+from parsing import logger, current_config, current_dataset
 
 
 def TimeFunction(exec_time):
@@ -53,8 +47,11 @@ def execute_workflow(workflow, level):
         thread.join()
 
 
-for workflow_name, workflow in config.items():
-    level = workflow_name
-    logger.info(level + " Entry")
-    execute_workflow(workflow, level)
-    logger.info(level + " Exit")
+def start_parsing():
+    config = current_config()
+    config = config[0]
+    for workflow_name, workflow in config.items():
+        level = workflow_name
+        logger.info(level + " Entry")
+        execute_workflow(workflow, level)
+        logger.info(level + " Exit")
