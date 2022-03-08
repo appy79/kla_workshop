@@ -1,0 +1,6 @@
+venv
+DataSet
+parsing.log
+.env
+__pycache__
+.DS_Store
