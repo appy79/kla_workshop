@@ -4,7 +4,6 @@ import logging, csv
 
 load_dotenv()
 config_file_path = os.environ.get("CONFIG_FILE")
-data_file_path = os.environ.get("DATA_FILE")
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -24,13 +23,3 @@ def current_config():
         config = list(yaml.load_all(f, Loader=yaml.FullLoader))
 
     return config
-
-
-def current_dataset():
-    dataset = []
-    with open(data_file_path, "r") as f:
-        csvreader = csv.reader(f)
-    for line in csvreader:
-        dataset.apend(line)
-    dataset.pop(0)
-    return dataset

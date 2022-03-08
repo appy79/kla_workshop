@@ -1,5 +1,9 @@
-import time, threading
-from parsing import logger, current_config, current_dataset
+import time, threading, os, csv
+from parsing import logger, current_config
+
+defect_data_storage = []
+
+OutPuts = {}
 
 
 def TimeFunction(exec_time):
@@ -12,6 +16,7 @@ def execute_activity(activity, level):
         if activity["Function"] == "TimeFunction":
             func_input = activity["Inputs"]["FunctionInput"]
             exec_time = activity["Inputs"]["ExecutionTime"]
+            condition = activity["Condition"]
             logger.info(
                 level
                 + " Executing"
@@ -22,6 +27,21 @@ def execute_activity(activity, level):
                 + ")"
             )
             TimeFunction(exec_time)
+        elif activity["Function"] == "DataLoad":
+            func_input = activity["Inputs"]["Filename"]
+            logger.info(level + " Executing" + " DataLoad(" + func_input + ")")
+            data_file_path = os.environ.get("DATA_FILE") + func_input
+            DataTable = []
+            with open(data_file_path, "r") as f:
+                csvreader = csv.reader(f)
+                next(csvreader)
+                for line in csvreader:
+                    DataTable.append(line)
+            NoOfDefects = len(DataTable)
+            OutPuts[level] = {}
+            OutPuts[level]["DataTable"] = DataTable
+            OutPuts[level]["NoOfDefects"] = NoOfDefects
+
     elif activity["Type"] == "Flow":
         execute_workflow(activity, level)
     logger.info(level + " Exit")
