@@ -16,17 +16,25 @@ def execute_activity(activity, level):
         if activity["Function"] == "TimeFunction":
             func_input = activity["Inputs"]["FunctionInput"]
             exec_time = activity["Inputs"]["ExecutionTime"]
-            condition = activity["Condition"]
-            logger.info(
-                level
-                + " Executing"
-                + " TimeFunction("
-                + func_input
-                + ","
-                + exec_time
-                + ")"
-            )
-            TimeFunction(exec_time)
+            condition = activity.get("Condition")
+            result = True
+            if condition:
+                lhs = condition[condition.find("(") + 1 : condition.find(")")]
+                rhs = int(condition[-2:-4])
+                expression = condition[-4:-6]
+                answer = OutPuts[lhs][NoOfDefects]
+                result = eval(answer + expression + rhs)
+            if result:
+                logger.info(
+                    level
+                    + " Executing"
+                    + " TimeFunction("
+                    + func_input
+                    + ","
+                    + exec_time
+                    + ")"
+                )
+                TimeFunction(exec_time)
         elif activity["Function"] == "DataLoad":
             func_input = activity["Inputs"]["Filename"]
             logger.info(level + " Executing" + " DataLoad(" + func_input + ")")
